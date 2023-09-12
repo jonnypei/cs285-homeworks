@@ -113,6 +113,10 @@ def run_training_loop(params):
     total_envsteps = 0
     start_time = time.time()
 
+    eval_average_returns = []
+    eval_stds = []
+    expert_average_returns = []
+    
     for itr in range(params['n_iter']):
         print("\n\n********** Iteration %i ************"%itr)
 
@@ -146,7 +150,7 @@ def run_training_loop(params):
                 # TODO: relabel collected obsevations (from our policy) with labels from expert policy
                 # HINT: query the policy (using the get_action function) with paths[i]["observation"]
                 # and replace paths[i]["action"] with these expert labels
-                for i in paths:
+                for i in range(len(paths)):
                     paths[i]["action"] = expert_policy.get_action(paths[i]["observation"])
 
         total_envsteps += envsteps_this_batch
@@ -163,7 +167,8 @@ def run_training_loop(params):
           # HINT2: use np.random.permutation to sample random indices
           # HINT3: return corresponding data points from each array (i.e., not different indices from each array)
           # for imitation learning, we only need observations and actions.  
-          indices = np.random.permutation(params['train_batch_size'])
+          
+          indices = np.random.permutation(len(replay_buffer.obs))[:params['train_batch_size']]
           ob_batch, ac_batch = replay_buffer.obs[indices], replay_buffer.acs[indices]
 
           # use the sampled data to train an agent
@@ -202,6 +207,13 @@ def run_training_loop(params):
 
             # perform the logging
             for key, value in logs.items():
+                if key == "Eval_AverageReturn":
+                    eval_average_returns.append(value)
+                elif key == "Eval_StdReturn":
+                    eval_stds.append(value)
+                elif key == "Train_AverageReturn":
+                    expert_average_returns.append(value)
+                    
                 print('{} : {}'.format(key, value))
                 logger.log_scalar(value, key, itr)
             print('Done logging...\n\n')
@@ -211,6 +223,9 @@ def run_training_loop(params):
         if params['save_params']:
             print('\nSaving agent params')
             actor.save('{}/policy_itr_{}.pt'.format(params['logdir'], itr))
+    
+    print("Eval Avg Returns:", eval_average_returns)
+    print("Eval Std Returns:", eval_stds)
 
 
 def main():

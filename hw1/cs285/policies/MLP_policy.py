@@ -134,14 +134,6 @@ class MLPPolicySL(BasePolicy, nn.Module, metaclass=abc.ABCMeta):
         # return more flexible objects, such as a
         # `torch.distributions.Distribution` object. It's up to you!
         return self.mean_net(observation)
-        
-        # scale_tril = torch.diag(torch.exp(self.logstd))
-        # batched_scale_tril = scale_tril.repeat(means.shape[0], 1, 1)
-        
-        # return distributions.MultivariateNormal(
-        #     means,
-        #     scale_tril=batched_scale_tril
-        # ) 
 
     def update(self, observations: np.ndarray, actions: np.ndarray):
         """
@@ -156,9 +148,9 @@ class MLPPolicySL(BasePolicy, nn.Module, metaclass=abc.ABCMeta):
         observations_t = ptu.from_numpy(observations)
         actions_t = ptu.from_numpy(actions)
         
-        predicted_actions = self.forward(observations_t)
+        pred_actions = self.forward(observations_t)
         
-        loss = torch.nn.MSELoss()(predicted_actions, actions_t)
+        loss = torch.nn.MSELoss()(pred_actions, actions_t)
         
         self.optimizer.zero_grad()
         loss.backward()
