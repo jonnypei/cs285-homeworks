@@ -134,6 +134,7 @@ class MLPPolicySL(BasePolicy, nn.Module, metaclass=abc.ABCMeta):
         # return more flexible objects, such as a
         # `torch.distributions.Distribution` object. It's up to you!
         means = self.mean_net(observation)
+        print(means)
         return means
         
         # scale_tril = torch.diag(torch.exp(self.logstd))
