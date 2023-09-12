@@ -133,9 +133,7 @@ class MLPPolicySL(BasePolicy, nn.Module, metaclass=abc.ABCMeta):
         # through it. For example, you can return a torch.FloatTensor. You can also
         # return more flexible objects, such as a
         # `torch.distributions.Distribution` object. It's up to you!
-        means = self.mean_net(observation)
-        print(means)
-        return means
+        return self.mean_net(observation)
         
         # scale_tril = torch.diag(torch.exp(self.logstd))
         # batched_scale_tril = scale_tril.repeat(means.shape[0], 1, 1)
@@ -159,6 +157,8 @@ class MLPPolicySL(BasePolicy, nn.Module, metaclass=abc.ABCMeta):
         actions_t = ptu.from_numpy(actions)
         
         predicted_actions = self.forward(observations_t)
+        
+        print(predicted_actions.shape, actions_t.shape)
         loss = torch.nn.MSELoss(predicted_actions, actions_t)
         
         self.optimizer.zero_grad()
