@@ -116,6 +116,10 @@ class MLPPolicySL(BasePolicy, nn.Module, metaclass=abc.ABCMeta):
         """
         torch.save(self.state_dict(), filepath)
 
+    def get_action(self, obs: np.ndarray) -> np.ndarray:
+        observation_t = ptu.from_numpy(obs if len(obs.shape) > 1 else obs[0])
+        return ptu.to_numpy(self.forward(observation_t).sample())
+        
     def forward(self, observation: torch.FloatTensor) -> Any:
         """
         Defines the forward pass of the network
@@ -139,7 +143,7 @@ class MLPPolicySL(BasePolicy, nn.Module, metaclass=abc.ABCMeta):
             scale_tril=batch_scale_tril
         ) 
 
-    def update(self, observations, actions):
+    def update(self, observations: np.ndarray, actions: np.ndarray):
         """
         Updates/trains the policy
 
@@ -149,11 +153,11 @@ class MLPPolicySL(BasePolicy, nn.Module, metaclass=abc.ABCMeta):
             dict: 'Training Loss': supervised learning loss
         """
         # TODO: update the policy and return the loss
-        obs_tensor = ptu.from_numpy(observations)
-        acs_tensor = ptu.from_numpy(actions)
+        observations_t = ptu.from_numpy(observations)
+        actions_t = ptu.from_numpy(actions)
         
-        ac_distro = self.forward(obs_tensor)
-        loss = -1 * ac_distro.log_prob(acs_tensor).mean()
+        actions_distro = self.forward(observations_t)
+        loss = -1 * actions_distro.log_prob(actions_t).mean()
         
         return {
             # You can add extra logging information here, but keep this line
