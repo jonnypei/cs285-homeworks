@@ -118,7 +118,8 @@ class MLPPolicySL(BasePolicy, nn.Module, metaclass=abc.ABCMeta):
 
     def get_action(self, obs: np.ndarray) -> np.ndarray:
         observation_t = ptu.from_numpy(obs if len(obs.shape) > 1 else obs[None])
-        return ptu.to_numpy(self.forward(observation_t).sample())
+        print(self.forward(observation_t).shape)
+        return ptu.to_numpy(self.forward(observation_t))
         
     def forward(self, observation: torch.FloatTensor) -> Any:
         """
@@ -158,7 +159,6 @@ class MLPPolicySL(BasePolicy, nn.Module, metaclass=abc.ABCMeta):
         
         predicted_actions = self.forward(observations_t)
         
-        print(predicted_actions.shape, actions_t.shape)
         loss = torch.nn.MSELoss()(predicted_actions, actions_t)
         
         self.optimizer.zero_grad()
