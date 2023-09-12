@@ -118,7 +118,7 @@ class MLPPolicySL(BasePolicy, nn.Module, metaclass=abc.ABCMeta):
 
     def get_action(self, obs: np.ndarray) -> np.ndarray:
         observation_t = ptu.from_numpy(obs if len(obs.shape) > 1 else obs[None])
-        return ptu.to_numpy(self.forward(observation_t).argmax(dim=1))
+        return ptu.to_numpy(self.forward(observation_t))
         
     def forward(self, observation: torch.FloatTensor) -> Any:
         """
