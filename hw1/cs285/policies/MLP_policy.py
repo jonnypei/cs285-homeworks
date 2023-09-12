@@ -159,7 +159,7 @@ class MLPPolicySL(BasePolicy, nn.Module, metaclass=abc.ABCMeta):
         predicted_actions = self.forward(observations_t)
         
         print(predicted_actions.shape, actions_t.shape)
-        loss = torch.nn.MSELoss(predicted_actions, actions_t)
+        loss = torch.nn.MSELoss()(predicted_actions, actions_t)
         
         self.optimizer.zero_grad()
         loss.backward()
