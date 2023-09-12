@@ -158,8 +158,12 @@ class MLPPolicySL(BasePolicy, nn.Module, metaclass=abc.ABCMeta):
         observations_t = ptu.from_numpy(observations)
         actions_t = ptu.from_numpy(actions)
         
-        actions_distro = self.forward(observations_t)
-        loss = -1 * actions_distro.log_prob(actions_t).mean()
+        predicted_actions = self.forward(observations_t)
+        loss = F.MSELoss(predicted_actions, actions_t)
+        
+        self.optimizer.zero_grad()
+        loss.backward()
+        self.optimizer.step()
         
         return {
             # You can add extra logging information here, but keep this line
