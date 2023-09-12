@@ -117,7 +117,7 @@ class MLPPolicySL(BasePolicy, nn.Module, metaclass=abc.ABCMeta):
         torch.save(self.state_dict(), filepath)
 
     def get_action(self, obs: np.ndarray) -> np.ndarray:
-        observation_t = ptu.from_numpy(obs if len(obs.shape) > 1 else obs[None, :])
+        observation_t = ptu.from_numpy(obs if len(obs.shape) > 1 else obs[None])
         return ptu.to_numpy(self.forward(observation_t).sample())
         
     def forward(self, observation: torch.FloatTensor) -> Any:
