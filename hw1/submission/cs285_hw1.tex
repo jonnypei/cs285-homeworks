@@ -147,16 +147,16 @@
       \hline
     \end{tabular}
     \caption{\textbf{Evaluation Mean and Standard Deviation of my policy's return over multiple rollouts, on the Ant and Walker2d tasks.}
-    I set \texttt{seed} to 4, \texttt{ep\_len} to 1000, and \texttt{eval\_batch\_size} to 10000. All other hyperparameters (e.g. model architecture, learning rate, etc.) are identical.
+    I set \texttt{seed} to 4, \texttt{ep\_len} to 1000, and \texttt{eval\_batch\_size} to 10000. All other hyperparameters (e.g. model architecture, learning rate, etc.) are identical and the default values.
     We observe very different results for the Ant and HalfCheetah tasks, even though the training configurations used were the exact same. In particular, our policy was able to achieve 81.2\% of the performance of the expert on the Ant task, and only 12.1\% on the Walker2d task.}
   \end{center}
   \end{table}
 
-  \item I experimented with the number of layers in the MLP model; a graph is provided below:
+  \item I experimented with varying the number of hidden layers in the MLP model, on the Walker2d task. A graph is provided below:
   \begin{figure}[h!]
     \begin{center}
-    \includegraphics[width=\textwidth*2/3]{BC Agent Performance vs. Number of MLP Hidden Layers.png}
-    \caption{\textbf{BC Agent Evaluation Average Return on the HalfCheetah task vs. Number of MLP Hidden Layers.} I varied the hidden layer from 2 to 12, and kept all other training configurations the same as in part (1). We can see that the BC's performance fluctuates a little bit depending on the hidden layer count, which is a bit unexpected. I anticipated seeing a unimodal distribution—hidden layers should improve the agent's ability to learn complex behavior, up to a certain point where overfitting occurs. The bimodal result we see here demonstrates similar ideas but the "tip-off" point is much less defined.}
+    \includegraphics[width=\textwidth*2/3]{walker2d_hidden.png}
+    \caption{\textbf{Evaluation Average Returns on the Walker2d task vs. Number of MLP Hidden Layers.} I varied the hidden layer from 2 to 12, and kept all other training configurations the same as in part (1). We can see that the agent's performance increases until it peaks at around 5 hidden layers, after which it mostly decreases until 12 layers. I wanted to try adjusting the number of hidden layers because deeper neural networks are capable of learning more complex patterns, until a certain point where they begin to overfit. My experiment (roughly) exhibits this behavior.}
   \end{center}
   \end{figure}
 \end{enumerate}
@@ -164,13 +164,21 @@
 \section{\textsc{DAgger}}
 
 \begin{itemize}
-  \item [2.]
+  \item [2.] After running DAgger on the Ant and Walker2d tasks, I present the following two graphs:
+  \begin{figure}[h!]
+    \begin{center}
+    \includegraphics[width=\textwidth*2/3]{ant_dagger.png}
+
+    \includegraphics[width=\textwidth*2/3]{walker2d_dagger.png}
+  \end{center}
+  \caption{\textbf{Average Returns on Ant and Walker2d Tasks vs. Number of DAgger Iterations.} I ran the agent on the Ant and Walker2d tasks, with the same configurations as described in the previous section. We see that DAgger substantially outperforms behavioral cloning, especially in Walker2d.}
+  \end{figure}
 \end{itemize}
 
 \section{Discussion}
 
 \begin{enumerate}
-  \item I spent 2 hours on Q1, 3 hours on Q3, and 2 hours on Q4.
+  \item I spent 2 hours on Q1, 6 hours on Q3, and 2 hours on Q4.
   \item Nope.
 \end{enumerate}
 

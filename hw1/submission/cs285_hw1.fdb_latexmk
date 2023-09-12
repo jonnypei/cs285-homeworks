@@ -1,7 +1,7 @@
 # Fdb version 3
-["pdflatex"] 1694497067 "/Users/jonnypei/Documents/Berkeley/Coursework/CS 285/cs285-homeworks/hw1/submission/cs285_hw1.tex" "/Users/jonnypei/Documents/Berkeley/Coursework/CS 285/cs285-homeworks/hw1/submission/cs285_hw1.pdf" "cs285_hw1" 1694497068
-  "/Users/jonnypei/Documents/Berkeley/Coursework/CS 285/cs285-homeworks/hw1/submission/cs285_hw1.aux" 1694497068 1876 b2b5679de0a170f9e086653f64af0493 ""
-  "/Users/jonnypei/Documents/Berkeley/Coursework/CS 285/cs285-homeworks/hw1/submission/cs285_hw1.tex" 1694497066 7594 8fcdc551a5312df322f6c4102ba08a8e ""
+["pdflatex"] 1694498741 "/Users/jonnypei/Documents/Berkeley/Coursework/CS 285/cs285-homeworks/hw1/submission/cs285_hw1.tex" "/Users/jonnypei/Documents/Berkeley/Coursework/CS 285/cs285-homeworks/hw1/submission/cs285_hw1.pdf" "cs285_hw1" 1694498742
+  "/Users/jonnypei/Documents/Berkeley/Coursework/CS 285/cs285-homeworks/hw1/submission/cs285_hw1.aux" 1694498742 2251 ddf131a2b40d81fafff9e5f52589db14 ""
+  "/Users/jonnypei/Documents/Berkeley/Coursework/CS 285/cs285-homeworks/hw1/submission/cs285_hw1.tex" 1694498740 8159 401759b894c4143814c5f875449666ae ""
   "/usr/local/texlive/2021/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc" 1136849721 2971 def0b6c1f0b107b3b936def894055589 ""
   "/usr/local/texlive/2021/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/local/texlive/2021/texmf-dist/fonts/tfm/jknappen/ec/ecbx1200.tfm" 1136768653 3584 402da0b29eafbad07963b1224b222f18 ""
@@ -181,12 +181,14 @@
   "/usr/local/texlive/2021/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1616695603 5169178 a2ce6e2d73f603b690db6777d06dbccb ""
   "/usr/local/texlive/2021/texmf-var/web2c/pdftex/pdflatex.fmt" 1643784187 2724743 f9c74b343305cbc037177134dee184f2 ""
   "/usr/local/texlive/2021/texmf.cnf" 1616695596 577 4c1911a7228e554c6032256d3cf5567d ""
-  "BC Agent Performance vs. Number of MLP Hidden Layers.png" 1694490315 21115 51c05efb7edec5c05bfb4ca25d1e54dd ""
-  "cs285_hw1.aux" 1694497068 1876 b2b5679de0a170f9e086653f64af0493 "pdflatex"
-  "cs285_hw1.tex" 1694497066 7594 8fcdc551a5312df322f6c4102ba08a8e ""
+  "ant_dagger.png" 1694498072 36459 730e87914959f04d60144f6a8f1a4c13 ""
+  "cs285_hw1.aux" 1694498742 2251 ddf131a2b40d81fafff9e5f52589db14 "pdflatex"
+  "cs285_hw1.tex" 1694498740 8159 401759b894c4143814c5f875449666ae ""
+  "walker2d_dagger.png" 1694498072 44119 6edaef3ca27e6b5a895bb80a3b2ac1ba ""
+  "walker2d_hidden.png" 1694498072 36764 74b70cb6073c700d9589537253f85cbe ""
   (generated)
-  "cs285_hw1.aux"
   "/Users/jonnypei/Documents/Berkeley/Coursework/CS 285/cs285-homeworks/hw1/submission/cs285_hw1.log"
   "/Users/jonnypei/Documents/Berkeley/Coursework/CS 285/cs285-homeworks/hw1/submission/cs285_hw1.pdf"
   "cs285_hw1.pdf"
   "cs285_hw1.log"
+  "cs285_hw1.aux"
