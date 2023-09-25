@@ -30,14 +30,16 @@ def sample_trajectory(
             )
 
         # TODO use the most recent ob and the policy to decide what to do
-        ac: np.ndarray = None
+        ac: np.ndarray = policy.get_action(ob)[0]
+        # ac_distribution = policy(ptu.from_numpy(ob[None, ...]))
+        # ac: np.ndarray = ptu.to_numpy(ac_distribution.sample())[0]
 
         # TODO: use that action to take a step in the environment
-        next_ob, rew, done, _ = None, None, None, None
+        next_ob, rew, done, _ = env.step(ac)
 
         # TODO rollout can end due to done, or due to max_length
         steps += 1
-        rollout_done: bool = None
+        rollout_done: bool = done or steps > max_length
 
         # record result of taking that action
         obs.append(ob)
@@ -76,7 +78,7 @@ def sample_trajectories(
         # collect rollout
         traj = sample_trajectory(env, policy, max_length, render)
         trajs.append(traj)
-
+        
         # count steps
         timesteps_this_batch += get_traj_length(traj)
     return trajs, timesteps_this_batch
@@ -145,3 +147,9 @@ def convert_listofrollouts(trajs):
 
 def get_traj_length(traj):
     return len(traj["reward"])
+
+def normalize(x: np.ndarray):
+    mu = x.mean()
+    sigma = x.std()
+    
+    return (x - mu) * (1/sigma if sigma else 1)
