@@ -30,7 +30,7 @@ def sample_trajectory(
             )
 
         # TODO use the most recent ob and the policy to decide what to do
-        ac: np.ndarray = policy.get_action(ob)[0]
+        ac: np.ndarray = policy.get_action(ob)
         # ac_distribution = policy(ptu.from_numpy(ob[None, ...]))
         # ac: np.ndarray = ptu.to_numpy(ac_distribution.sample())[0]
 
@@ -149,7 +149,8 @@ def get_traj_length(traj):
     return len(traj["reward"])
 
 def normalize(x: np.ndarray):
-    mu = x.mean()
-    sigma = x.std()
+    return (x - x.mean()) / (x.std() + 1e-10)
+    # mu = x.mean()
+    # sigma = x.std()
     
-    return (x - mu) * (1/sigma if sigma else 1)
+    # return (x - mu) * (1/sigma if sigma else 1)
