@@ -68,11 +68,11 @@ class PGAgent(nn.Module):
         # TODO: flatten the lists of arrays into single arrays, so that the rest of the code can be written in a vectorized
         # way. obs, actions, rewards, terminals, and q_values should all be arrays with a leading dimension of `batch_size`
         # beyond this point.
-        obs = np.stack(obs, axis=0)
-        actions = np.stack(actions, axis=0)
-        rewards = np.stack(actions, axis=0)
-        terminals = np.stack(actions, axis=0)
-
+        obs = np.concatenate(obs)
+        actions = np.concatenate(actions)
+        rewards = np.concatenate(rewards)
+        terminals = np.concatenate(terminals)
+        
         # step 2: calculate advantages from Q values
         advantages: np.ndarray = self._estimate_advantage(
             obs, rewards, q_values, terminals
@@ -86,7 +86,7 @@ class PGAgent(nn.Module):
         if self.critic is not None:
             # TODO: perform `self.baseline_gradient_steps` updates to the critic/baseline network
             for _ in range(self.baseline_gradient_steps):
-                critic_info: dict = self.critic.update(obs, q_values) # TODO: not sure about this lol
+                critic_info: dict = self.critic.update(obs, q_values)
 
             info.update(critic_info)
 
@@ -121,10 +121,10 @@ class PGAgent(nn.Module):
         """
         if self.critic is None:
             # TODO: if no baseline, then what are the advantages?
-            advantages = q_values.copy()
+            advantages = q_values
         else:
             # TODO: run the critic and use it as a baseline
-            values = ptu.to_numpy(self.critic.forward(ptu.from_numpy(obs)))
+            values = ptu.to_numpy(self.critic(ptu.from_numpy(obs)))[:, 0]
             assert values.shape == q_values.shape
 
             if self.gae_lambda is None:
@@ -162,7 +162,7 @@ class PGAgent(nn.Module):
         Note that all entries of the output list should be the exact same because each sum is from 0 to T (and doesn't
         involve t)!
         """
-        return [np.sum([np.power(self.gamma, np.arange(len(rewards))) * np.array(rewards)])] * len(rewards)
+        return [np.sum(np.power(self.gamma, np.arange(len(rewards))) * np.array(rewards))] * len(rewards)
 
 
     def _discounted_reward_to_go(self, rewards: Sequence[float]) -> Sequence[float]:
