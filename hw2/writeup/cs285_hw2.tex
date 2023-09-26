@@ -16,6 +16,7 @@
 \usepackage{listings}
 \usepackage{tikz}
 \usepackage{quiver}
+\usepackage{color}
 
 \newcommand{\xb}{\mathbf{x}}
 \newcommand{\yb}{\mathbf{y}}
@@ -28,7 +29,8 @@
 
 \DeclareFontShape{OT1}{cmtt}{bx}{n}{<5><6><7><8><9><10><10.95><12><14.4><17.28><20.74><24.88>cmttb10}{}
 
-
+\definecolor{darkblue}{rgb}{0.2, 0.2, 0.5}
+\newcommand{\sol}{~\\\color{darkblue}{\bf Solution:~\\}}
 \usepackage{forest}
 
 \usepackage{hyperref}
@@ -52,7 +54,7 @@ backgroundcolor = \color{light-yellow}
 }
 
 \begin{centering}
-    {\Large [SOLUTION TEMPLATE] Assignment 2: Policy Gradients} \\
+    {\Large CS 285 Homework 2: Policy Gradients} \\
     \vspace{.25cm}
     \textbf{Due September 25, 11:59 pm} \\
 \end{centering}
@@ -128,7 +130,8 @@ Parametrize the policy as stationary (not dependent on time) with a single param
     \textbf{Hint}: to compute $\sum_{k=1}^\infty k\alpha^{k-1}$, you can write:
     \[\sum_{k=1}^\infty k\alpha^{k-1} = \sum_{k=1}^\infty \frac{d}{d\alpha}\alpha^k = \frac{d}{d\alpha}\sum_{k=1}^\infty\alpha^k\]
 
-\textbf{Solution:}
+    \begin{sol}
+    \end{sol}
 
     \item \label{exact_gradient} Compute the expected return of the policy $\E_{\tau \sim \pi_\theta} R(\tau)$ directly. Compute the gradient of this expression with respect to $\theta$ and verify that this matches the policy gradient.
 
@@ -140,18 +143,21 @@ Parametrize the policy as stationary (not dependent on time) with a single param
 
 \textbf{Hint:}  Once you have it expressed as a sum of terms $P(\theta)/Q(\theta)$ where $P$ and $Q$ are polynomials, you can use a symbolic computing program (Mathematica, SymPy, etc) to simplify to a single rational expression.
 
-\textbf{Solution:}
+\begin{sol}
+\end{sol}
 
 \newpage
 \question[sec:analysis3] Apply return-to-go as an advantage estimator.
 \begin{enumerate}
     \item Write the modified policy gradient and confirm that it is unbiased.
 
-\textbf{Solution:}
+    \begin{sol}
+    \end{sol}
 
     \item Compute the variance of the return-to-go policy gradient and plot it on $[0, 1]$ alongside the variance of the original estimator.
 
-\textbf{Solution:}
+    \begin{sol}
+    \end{sol}
 
 \end{enumerate}
 \newpage
@@ -176,7 +182,13 @@ Using the same policy parametrization as above, consider off-policy policy gradi
 \begin{enumerate}
     \item Write the policy gradient with importance sampling.
 
+    \begin{sol}
+    \end{sol}
+
     \item Compute its variance.
+    
+    \begin{sol}
+    \end{sol}
 
 \end{enumerate}
 

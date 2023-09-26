@@ -31,8 +31,6 @@ def sample_trajectory(
 
         # TODO use the most recent ob and the policy to decide what to do
         ac: np.ndarray = policy.get_action(ob)
-        # ac_distribution = policy(ptu.from_numpy(ob[None, ...]))
-        # ac: np.ndarray = ptu.to_numpy(ac_distribution.sample())[0]
 
         # TODO: use that action to take a step in the environment
         next_ob, rew, done, _ = env.step(ac)
