@@ -1,0 +1,118 @@
+\section{Analysis}
+
+\paragraph{Setting.} We have a discounted tabular MDP $M =(\mathcal{S}, \mathcal{A}, P, r, \gamma)$ where $\mathcal{S}$, $\mathcal{A}$ are a finite set of states and actions, $P$ is the dynamics model (where $P(\cdot \mid s, a)$ is a probability distribution over states), $r$ is a reward function (where rewards are between $[0, 1]$), and $\gamma \in (0, 1)$ is the discount factor. 
+
+
+\paragraph{Learning a dynamics model.} We consider the most naive model-based algorithm. Suppose we have access to a simulator of the environment, and at each state-action pair $(s, a)$, we call our simulator $N$ times retrieving samples $s' \sim P(\cdot \mid s, a)$. Then, we build a dynamics model of the environment as simply:
+$$
+\widehat{P}(s' \mid s, a) = \frac{\mathsf{count}(s, a, s')}{N}
+$$
+where $\mathsf{count}(s, a, s')$ is the number of times we observed $(s, a)$ transitioning to $s'$. 
+For tabular MDP $M$, we can view $\widehat{P}$ as a matrix of size $|\mathcal{S}||\mathcal{A}| \times |\mathcal{S}|$. 
+
+\paragraph{Additional notation.} Let $\widehat{M}$ be an MDP identical to $M$, except where the true dynamics $P$ is replaced by model $\widehat{P}$. Let $\widehat{V}^\pi$, $\widehat{Q}^\pi$, $\widehat{V}^*$, and $\widehat{Q}^*$ denote the value function and state-action value function, and optimal value and state-action value function, in $\widehat{M}$, respectively. 
+
+
+\paragraph{Problem 2.1.} 
+In lecture 17, we saw a proof of a lemma called the \emph{Simulation Lemma}, which states that for any policy $\pi$:
+\begin{align*}
+Q^\pi - \widehat{Q}^\pi = \gamma(I - \gamma \widehat{P}^\pi)^{-1} (P - \widehat{P}) V^\pi\,.
+\end{align*}
+Prove the following similar lemma, which we dub the \emph{Alternative Simulation Lemma}:
+
+\emph{
+(Alternative Simulation Lemma) For any policy $\pi$, we have:}
+\begin{align*}
+   Q^\pi - \widehat{Q}^\pi = \gamma(I - \gamma P^\pi)^{-1} (P - \widehat{P}) \widehat{V}^\pi\,. 
+\end{align*}
+
+\begin{sol}
+    We prove the Alternative Simulation Lemma as follows:
+    \begin{align*}
+        Q^\pi - \hat{Q}^\pi &= (I - \gamma P^\pi)^{-1} r - \hat{Q}^\pi \\
+        &= (I - \gamma P^\pi)^{-1} \left(r - (I - \gamma P^\pi) \hat{Q}^\pi\right) \\
+        &= (I - \gamma P^\pi)^{-1} \left((I - \gamma \hat{P}^\pi)\hat{Q}^\pi - (I - \gamma P^\pi) \hat{Q}^\pi\right) \\
+        &= (I - \gamma P^\pi)^{-1} \left( \gamma(P^\pi - \hat{P}^\pi) \hat{Q}^\pi\right) \\
+        &= \gamma(I - \gamma P^\pi)^{-1} (P - \hat{P}) \Pi \hat{Q}^\pi \\
+        &= \gamma(I - \gamma P^\pi)^{-1} (P - \hat{P}) \hat{V}^\pi
+    \end{align*}
+\end{sol}
+
+
+\newpage\paragraph{Problem 2.2} 
+In lecture 17, we saw how to bound $||Q^\pi - \widehat{Q}^\pi||_{\infty}$ using the Simulation Lemma and standard concentration arguments. We will attempt to do the same with the Alternative Simulation Lemma derived in Problem 2.1. Which of the following statements (may be multiple) are correct?
+
+\emph{Hint: A statement is correct if the inequalities referenced are applied correctly, and if their assumptions hold before applying them.}
+
+\emph{Hint 2: For each observed transition from $(s, a)$ to $s'$, you can define a random variable $X = \mathbb{I}_{s'} \cdot V$ that is the dot product between $\mathbb{I}_{s'} \in \mathbb{R}^{|\mathcal{S}|}$ an indicator vector at $s'$ and vector $V \in \mathbb{R}^{|\mathcal{S}|}$, and whose expected value is $\mathbb{E}[X] = P(\cdot \mid s, a) \cdot V$. What does Hoeffding's inequality look like when applied to all $N$ observed transitions from $(s, a)$ in this way? Can Hoeffding's inequality be applied for any vector $V$?}
+\begin{itemize}[leftmargin=0.2in]
+    \item[1.] For any policy $\pi$ and $\delta > 0$, the following holds with probability at least $1 - \delta$,
+    \begin{align*}
+    ||(P - \widehat{P}) \widehat{V}^\pi||_{\infty}
+    &\leq 
+    \max_{s, a} ||P(\cdot \mid s, a) - \widehat{P}(\cdot \mid s, a)||_{1} ||\widehat{V}^\pi||_{\infty} \\
+    &\leq 
+    \frac{1}{1 - \gamma} \sqrt{\frac{4|S| \log (|\mathcal{S}||\mathcal{A}|/\delta)}{N}}\,,
+    \end{align*}
+    where we use Hoeffding's inequality and the union bound in the second inequality.
+    
+    \begin{sol}
+        This statement is \textbf{correct}. Note that from lecture, we have that 
+        \[\|P(\cdot \mid s, a) - \hat{P}(\cdot \mid s, a)\|_1 \leq c \sqrt{\frac{|\mathcal{S}| \log (1/\delta)}{N}}\]
+        for some constant $c$ with probability $1 - \delta$. Then, let us use $c = 2$ and apply a union bound to obtain the following: 
+        \[P\left(\max_{s, a} \|P(\cdot \mid s, a) - \hat{P}(\cdot \mid s, a)\|_1 > 2 \sqrt{\frac{|S| \log (1/\delta^*)}{N}}\right) \leq |\mathcal{S}||\mathcal{A}| \delta^*.\]
+        We want the RHS to be a single term $\delta$, so we substitute $\delta^* = \frac{\delta}{|S||A|}$ to get 
+        \[P\left(\max_{s, a} \|P(\cdot \mid s, a) - \hat{P}(\cdot \mid s, a)\|_1 > 2 \sqrt{\frac{|S| \log (|\mathcal{S}||\mathcal{A}| / \delta)}{N}}\right) \leq |\mathcal{S}||\mathcal{A}| \cdot \frac{\delta}{|\mathcal{S}||\mathcal{A}|} = \delta,\]
+        and taking the complement gives 
+        \[P\left(\max_{s, a} \|P(\cdot \mid s, a) - \hat{P}(\cdot \mid s, a)\|_1 \leq \sqrt{\frac{4|S| \log (|\mathcal{S}||\mathcal{A}| / \delta)}{N}}\right) \geq 1 - \delta.\]
+        \[P\left(\max_{s, a} \|P(\cdot \mid s, a) - \hat{P}(\cdot \mid s, a)\|_1 \|\hat{V}^\pi\|_\infty \leq \sqrt{\frac{4|\mathcal{S}| \log (|\mathcal{S}||\mathcal{A}| / \delta)}{N}} \|\hat{V}^\pi\|_\infty\right) \geq 1 - \delta.\]
+        Thus, we conclude that 
+        \begin{align*}
+            ||(P - \widehat{P}) \widehat{V}^\pi||_{\infty}
+            &\leq 
+            \max_{s, a} ||P(\cdot \mid s, a) - \widehat{P}(\cdot \mid s, a)||_{1} ||\widehat{V}^\pi||_{\infty} \\
+            &\leq \sqrt{\frac{4|\mathcal{S}| \frac{|\Sfancy||\Afancy|}{\delta}}{N}} \|\hat{V}^\pi\|_\infty \\
+            &\leq 
+            \frac{1}{1 - \gamma} \sqrt{\frac{4|S| \log (|\mathcal{S}||\mathcal{A}|/\delta)}{N}}\,,
+            \end{align*}
+        with probability at least $1 - \delta$. 
+    \end{sol}
+
+    \newpage
+
+    \item[2.] For any policy $\pi$ and $\delta > 0$, the following holds with probability at least $1 - \delta$,
+    \begin{align*}
+    ||(P - \widehat{P}) \widehat{V}^\pi||_{\infty}
+    &\leq 
+    \frac{1}{1 - \gamma} \sqrt{\frac{2|\mathcal{S}| \log(2|\mathcal{S}||\mathcal{A}|/\delta)}{N}}\,,
+    \end{align*}
+    using Hoeffding's inequality and the union bound.
+
+    \begin{sol}
+        This statement is \textbf{incorrect}. Since $\hat{V}^\pi$ depends on the observed transitions, we cannot use Hoeffding's inequality. 
+    \end{sol}
+
+    \item[3.] For $\delta > 0$, the following holds with probability at least $1 - \delta$,
+    \begin{align*}
+    ||(P - \widehat{P}) V^*||_{\infty} 
+    \leq 
+    \frac{1}{1- \gamma} \sqrt{\frac{2 \log(2|\mathcal{S}||\mathcal{A}|/\delta)}{N}}\,,
+    \end{align*}
+    where the inequality arises from Hoeffding's inequality and the union bound.
+
+    \begin{sol}
+        This statement is \textbf{correct}. Since $V^*$ is independent of the observed transitions, we can simply apply our result from statement (1) to derive this result.
+    \end{sol}
+
+    \item[4.] For $\delta > 0$, the following holds with probability at least $1 - \delta$,
+    \begin{align*}
+    ||(P - \widehat{P}) \widehat{V}^*||_{\infty} 
+    \leq 
+    \frac{1}{1- \gamma} \sqrt{\frac{2 \log(2|\mathcal{S}||\mathcal{A}|/\delta)}{N}}\,,
+    \end{align*}
+    where we use Hoeffding's inequality and the union bound.
+
+    \begin{sol}
+        This statement is \textbf{incorrect}. Since $\hat{V}^*$ depends on the observed transitions, we cannot use Hoeffding's inequality. 
+    \end{sol}
+\end{itemize}
