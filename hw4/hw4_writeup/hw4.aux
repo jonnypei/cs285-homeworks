@@ -1,19 +1,5 @@
 \relax 
 \providecommand\hyper@newdestlabel[2]{}
-\providecommand\HyperFirstAtBeginDocument{\AtBeginDocument}
-\HyperFirstAtBeginDocument{\ifx\hyper@anchor\@undefined
-\global\let\oldcontentsline\contentsline
-\gdef\contentsline#1#2#3#4{\oldcontentsline{#1}{#2}{#3}}
-\global\let\oldnewlabel\newlabel
-\gdef\newlabel#1#2{\newlabelxx{#1}#2}
-\gdef\newlabelxx#1#2#3#4#5#6{\oldnewlabel{#1}{{#2}{#3}}}
-\AtEndDocument{\ifx\hyper@anchor\@undefined
-\let\contentsline\oldcontentsline
-\let\newlabel\oldnewlabel
-\fi}
-\fi}
-\global\let\hyper@last\relax 
-\gdef\HyperFirstAtBeginDocument#1{#1}
 \providecommand\HyField@AuxAddToFields[1]{}
 \providecommand\HyField@AuxAddToCoFields[2]{}
 \providecommand \oddpage@label [2]{}
@@ -36,11 +22,11 @@
 \@writefile{toc}{\contentsline {section}{\numberline {4}Code}{7}{section.4}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Overview}{7}{subsection.4.1}\protected@file@percent }
 \@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Based on the middle plot, it seems that increasing the number of layers to 10 is highly detrimental to convergence of the loss. On the other hand, looking at the right figure, we see that increasing the learning rate to 0.01 improves the speed of convergence for this task.}}{8}{figure.1}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces The default ensemble size of 3 and ensemble size of 10 resulted in similar performance. However, the ensemble size of 1 resulted in a lower return and seemed more unstable. It seems that a larger ensemble size improves performance and stability.}}{12}{figure.2}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces The default ensemble size of 3 seems to outperform both variations with 1 and 10 models in the ensemble. However, it seems that the larger ensemble size variation is more stable than both the default and ensemble size 1; setting the ensemble size to 1 resulted in the worst performance and stability.}}{12}{figure.2}\protected@file@percent }
 \@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces A higher number of action sequences (2000) seemed to have improved performance, while a lower number (500) seemed to result in lower performance. This behavior is most likely due to more variety in actions choices when setting a larger number of candidate action sequences.}}{13}{figure.3}\protected@file@percent }
 \@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Increasing the planning horizon to 15 seems to have worsened performance, while decreasing the horizon to 5 seems to have improved performance. However, I ran another experiment with the planning horizon set to 2, and that worsened performance. This behavior is most likely due to large error accumulation at much higher horizons, and lack of foresight for much smaller horizons.}}{13}{figure.4}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces The CEM action selection method significantly outperforms random shooting, and the setting with 4 iterations has a higher performance compared to the setting with 2 iterations.}}{14}{figure.5}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces The Full MBPO policy seems to outperform both the Dyna algorithm and the model-free SAC baseline. The latter two methods seemed to also be less stable compared to the full MBPO, with the model-free SAC baseline performing the worst overall. This behavior makes sense, as the Dyna-like and full MBPO are more efficient at action exploration compared to the baseline SAC.}}{15}{figure.6}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces The CEM action selection method significantly outperforms random shooting, and the setting with 4 iterations has a higher performance compared to the setting with 2 iterations. This behavior is most likely explained by improved planning due to increased iterations.}}{14}{figure.5}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces The Full MBPO policy seems to outperform both the Dyna algorithm and the model-free SAC baseline, although only slightly with respect to the former. The latter two methods seem to also be less stable compared to the full MBPO, with the model-free SAC baseline performing the worst overall. This behavior makes sense, as the Dyna-like and full MBPO are more efficient at action exploration compared to the baseline SAC.}}{15}{figure.6}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Submitting the PDF}{16}{subsection.4.2}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {4.3}Submitting the Code and Logs}{16}{subsection.4.3}\protected@file@percent }
 \gdef \@abspage@last{16}

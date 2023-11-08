@@ -404,7 +404,7 @@ Be sure to include titles and legends on all of your plots.
   \begin{center}
     \includegraphics[width=4in]{images/q4/ensemble.png}
   \end{center}
-  \caption{The default ensemble size of 3 and ensemble size of 10 resulted in similar performance. However, the ensemble size of 1 resulted in a lower return and seemed more unstable. It seems that a larger ensemble size improves performance and stability.}
+  \caption{The default ensemble size of 3 seems to outperform both variations with 1 and 10 models in the ensemble. However, it seems that the larger ensemble size variation is more stable than both the default and ensemble size 1; setting the ensemble size to 1 resulted in the worst performance and stability.}
   \end{figure}
 
   \newpage
@@ -444,7 +444,7 @@ Because CEM can be much slower than random-shooting, we will only run MBRL for 5
     \item \verb+cs285/agents/model_based_agent.py+: the CEM action selection strategy.
 \end{enumerate}
 
-\underline{What commands to run:}\\
+\underline{What commands to run:}
 \begin{lstlisting}[escapechar=@]
 python cs285/scripts/run_hw4.py -cfg experiments/mpc/halfcheetah_cem.yaml
 \end{lstlisting}
@@ -462,7 +462,7 @@ You should expect rewards around 800 or higher when using CEM on the cheetah env
     \begin{center}
       \includegraphics[width=4in]{images/q5/cem.png}
     \end{center}
-    \caption{The CEM action selection method significantly outperforms random shooting, and the setting with 4 iterations has a higher performance compared to the setting with 2 iterations.}
+    \caption{The CEM action selection method significantly outperforms random shooting, and the setting with 4 iterations has a higher performance compared to the setting with 2 iterations. This behavior is most likely explained by improved planning due to increased iterations.}
   \end{figure}
 \end{sol}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -470,7 +470,7 @@ You should expect rewards around 800 or higher when using CEM on the cheetah env
 \newpage
 \section*{Problem 6}
 
-\underline{What will you implement:}\\ 
+\underline{What will you implement:}
 
 In this homework you will also be implementing a variant of \href{https://arxiv.org/pdf/1906.08253}{MBPO}. Another way of leveraging the learned model is through generating additional samples to train the policy and value functions. Since RL often requires many environment interaction samples, which can be costly, we can use our learned model to generate additional samples to improve sample complexity. In MBPO, we build on your SAC implementation from HW3 and use the learned model you implemented in the earlier questions for generating additional samples to train our SAC agent. We will try three settings:
 \begin{enumerate}
@@ -484,7 +484,7 @@ In this homework you will also be implementing a variant of \href{https://arxiv.
     \item \verb+cs285/scripts/run_hw4.py+: the \verb+collect_mbpo_rollout+ function at the top of the file.
 \end{enumerate}
 
-\underline{What commands to run:}\\
+\underline{What commands to run:}
 \begin{lstlisting}[escapechar=@]
 python cs285/scripts/run_hw4.py -cfg experiments/mpc/halfcheetah_mbpo.yaml --sac_config_file experiments/sac/halfcheetah_clipq.yaml
 \end{lstlisting}
@@ -501,11 +501,11 @@ You should be able to reach returns around 700 or higher with full MBPO with a r
   We provide a plot comparing the 3 runs below:
   \begin{figure}[ht!]
     \color{darkblue}
-    % TODO
-    % \begin{center}
-    %   \includegraphics[width=4in]{images/q6/mbpo.png}
-    % \end{center}
-    \caption{The Full MBPO policy seems to outperform both the Dyna algorithm and the model-free SAC baseline. The latter two methods seemed to also be less stable compared to the full MBPO, with the model-free SAC baseline performing the worst overall. This behavior makes sense, as the Dyna-like and full MBPO are more efficient at action exploration compared to the baseline SAC.}
+    \begin{center}
+      \includegraphics[width=3in]{images/q6/mbpo.png}
+    \end{center}
+    \caption{The Full MBPO policy seems to outperform both the Dyna algorithm and the model-free SAC baseline, although only slightly with respect to the former. 
+    The latter two methods seem to also be less stable compared to the full MBPO, with the model-free SAC baseline performing the worst overall. This behavior makes sense, as the Dyna-like and full MBPO are more efficient at action exploration compared to the baseline SAC.}
   \end{figure}
 \end{sol}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
