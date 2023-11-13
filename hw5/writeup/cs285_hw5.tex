@@ -65,6 +65,10 @@
 \renewcommand\makeheadrule{\color{black}\rule[-.75\baselineskip]{\linewidth}{0.4pt}}
 \renewcommand*\footnoterule{}
 
+\newcommand{\red}{\color{red}}
+\definecolor{darkblue}{rgb}{0.2, 0.2, 0.5}
+\newcommand{\sol}{~\color{darkblue}{\bf Solution:~}}
+
 \begin{document}
 \lstset{basicstyle = \ttfamily,columns=fullflexible,
 backgroundcolor = \color{light-yellow}
@@ -111,6 +115,9 @@ You may also assume access to the distributions $\pi(\a\mid\s)$ and $\pib(\a\mid
 	\end{align*}
 	How can we enforce this constraint by adding a bonus $b(\s,\a)$ to the reward $\bar r(\s,\a)=r(\s,\a)+\lambda b(\s,\a)$? Write your answer as an expression for $b(\s,\a)$.
 	
+    \begin{sol}
+    \end{sol}
+
 	\item The $f$-divergence is a generalization of the KL-divergence that can be defined for distributions $P$ and $Q$ by $$D_f[P\|Q]=\int Q(x)f\left(P(x) \over Q(x)\right)\mathrm dx$$ where $f$ is a convex function with zero at $1$. We can state an $f$-divergence policy constraint as 
 	\begin{align*}
 	    D(\pi,\pib)&=\E_{\s\sim p_\pi}D_{f}[\pi(\a\mid\s)\|\pib(\a\mid\s)]\\
@@ -119,13 +126,21 @@ You may also assume access to the distributions $\pi(\a\mid\s)$ and $\pib(\a\mid
    	The $f$-divergence constraint allows us to specify many alternative constraints on the divergence between $\pi$ and $\pib$. For example, by taking $f(x)=\frac12|x-1|$, the $f$-divergence becomes equivalent to total variation distance (TVD), and by taking $f(x)=-(x+1)\log\left(x+1\over2\right)+x\log x$ it reduces to the Jensen-Shannon divergence (JSD). When $f(x)=x\log x$ we recover the standard KL divergence.
    	
    	How can you extend your answer from part (\ref{q:kl}) to account for an arbitrary $f$-divergence? Your answer should be a more general alternate expression for $b(\s,\a)$ in terms of $f$.
-	\item Suppose $M$ has a finite horizon $H$ and we want to constrain divergence in the distribution of \emph{trajectories of states} under $\pi$ and $\pib$. We can express the KL divergence between the (state) trajectory distributions for $\tau=(\s_1,\s_2,\ldots,\s_H)$ as follows:
+	
+    \begin{sol}
+    \end{sol}
+
+    \item Suppose $M$ has a finite horizon $H$ and we want to constrain divergence in the distribution of \emph{trajectories of states} under $\pi$ and $\pib$. We can express the KL divergence between the (state) trajectory distributions for $\tau=(\s_1,\s_2,\ldots,\s_H)$ as follows:
 	\begin{align*}
 	    D(\pi,\pib)&=\E_{\tau\sim\pi}D_{KL}[p_{\pi}(\tau)\|p_{\pib}(\tau)].
    	\end{align*} 
    	What expression for $b(\s,\a)$ enforces this constraint? You may assume access to the dynamics $p(\s'\mid\s,\a)$. [\emph{Hint: marginalize over actions to get a bonus $b(\s,\a,\s')$ that depends on $\s'$. How can this be converted to a bonus $b(\s,\a)$ that can be used with $r(\s,\a)$?}]
 
+    \begin{sol}
+    \end{sol}
 \end{enumerate}
+
+\newpage
 
 \section{Coding}
 \label{sec:coding}
