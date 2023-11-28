@@ -109,34 +109,40 @@ You may also assume access to the distributions $\pi(\a\mid\s)$ and $\pib(\a\mid
 
 \begin{enumerate}
 
-	\item\label{q:kl} Suppose we wish to learn $\pi$ under a KL-divergence constraint, i.e., 
+	\item  Suppose we wish to learn $\pi$ under a KL-divergence constraint, i.e., 
 	\begin{align*}
 		D(\pi,\pib)=D_{KL}[\pi(\a\mid\s)\|\pib(\a\mid\s)].
 	\end{align*}
 	How can we enforce this constraint by adding a bonus $b(\s,\a)$ to the reward $\bar r(\s,\a)=r(\s,\a)+\lambda b(\s,\a)$? Write your answer as an expression for $b(\s,\a)$.
 	
     \begin{sol}
+        To enforce this constraint, we set the adjustment to be a negative KL divergence penalty:
+        \[b(\s, \a) = -D_{KL}[\pi(\a\mid\s)\|\pib(\a\mid\s)].\]
     \end{sol}
 
 	\item The $f$-divergence is a generalization of the KL-divergence that can be defined for distributions $P$ and $Q$ by $$D_f[P\|Q]=\int Q(x)f\left(P(x) \over Q(x)\right)\mathrm dx$$ where $f$ is a convex function with zero at $1$. We can state an $f$-divergence policy constraint as 
 	\begin{align*}
-	    D(\pi,\pib)&=\E_{\s\sim p_\pi}D_{f}[\pi(\a\mid\s)\|\pib(\a\mid\s)]\\
-	    &= \E_{\s\sim p_\pi}\E_{\pib(\a\mid\s)}f\left(\pi(\a\mid\s)\over\pib(\a\mid\s)\right).
+	    D(\pi,\pib)&=D_{f}[\pi(\a\mid\s)\|\pib(\a\mid\s)]\\
+	    &= \E_{\pib(\a\mid\s)}f\left(\pi(\a\mid\s)\over\pib(\a\mid\s)\right).
    	\end{align*}
    	The $f$-divergence constraint allows us to specify many alternative constraints on the divergence between $\pi$ and $\pib$. For example, by taking $f(x)=\frac12|x-1|$, the $f$-divergence becomes equivalent to total variation distance (TVD), and by taking $f(x)=-(x+1)\log\left(x+1\over2\right)+x\log x$ it reduces to the Jensen-Shannon divergence (JSD). When $f(x)=x\log x$ we recover the standard KL divergence.
    	
-   	How can you extend your answer from part (\ref{q:kl}) to account for an arbitrary $f$-divergence? Your answer should be a more general alternate expression for $b(\s,\a)$ in terms of $f$.
+   	How can you extend your answer from part (1) to account for an arbitrary $f$-divergence? Your answer should be a more general alternate expression for $b(\s,\a)$ in terms of $f$.
 	
     \begin{sol}
+        To account for an arbitrary $f$-divergence, we simply replace the KL divergence in part (1) with its generalized version:
+        \[b(\s, \a) = -\E_{\pib(\a\mid\s)}f\left(\pi(\a\mid\s)\over\pib(\a\mid\s)\right).\]
     \end{sol}
 
     \item Suppose $M$ has a finite horizon $H$ and we want to constrain divergence in the distribution of \emph{trajectories of states} under $\pi$ and $\pib$. We can express the KL divergence between the (state) trajectory distributions for $\tau=(\s_1,\s_2,\ldots,\s_H)$ as follows:
 	\begin{align*}
-	    D(\pi,\pib)&=\E_{\tau\sim\pi}D_{KL}[p_{\pi}(\tau)\|p_{\pib}(\tau)].
+	    D(\pi,\pib)&= D_{KL}[p_{\pi}(\tau)\|p_{\pib}(\tau)].
    	\end{align*} 
    	What expression for $b(\s,\a)$ enforces this constraint? You may assume access to the dynamics $p(\s'\mid\s,\a)$. [\emph{Hint: marginalize over actions to get a bonus $b(\s,\a,\s')$ that depends on $\s'$. How can this be converted to a bonus $b(\s,\a)$ that can be used with $r(\s,\a)$?}]
 
     \begin{sol}
+        To enforce this constraint, we marginalize over the next state, and sum up the marginal KL divergences:
+        \[b(\s, \a) = -\sum_{\s' \in \mathcal{S}} p(\s ' \mid \s, \a) \cdot D_{KL}[\pi(\a\mid\s)\|\pib(\a\mid\s)].\]
     \end{sol}
 \end{enumerate}
 
@@ -270,9 +276,9 @@ These scripts will save visualizations of the final dataset in the \verb+explora
 \begin{sol} I provide the final dataset visualizations for each of the easy, medium, and hard environments below:
 \begin{figure}[!ht]\color{darkblue}
     \begin{center}
-    \includegraphics[width=2.2in]{../exploration_visualization/PointmassEasy-v0_random.png}
-    \includegraphics[width=2.2in]{../exploration_visualization/PointmassMedium-v0_random.png}
-    \includegraphics[width=2.2in]{../exploration_visualization/PointmassHard-v0_random.png}    
+    % \includegraphics[width=2.2in]{../exploration_visualization/PointmassEasy-v0_random.png}
+    % \includegraphics[width=2.2in]{../exploration_visualization/PointmassMedium-v0_random.png}
+    % \includegraphics[width=2.2in]{../exploration_visualization/PointmassHard-v0_random.png}    
 \end{center}
     \caption{Dataset Visualization of Easy (left), Medium (center), and Hard (right) Environments}
 \end{figure}
@@ -303,9 +309,9 @@ Again, include the visualizations in your final report. \textbf{These visualizat
 \begin{sol} I provide the final dataset visualizations for each of the easy, medium, and hard environments below:
     \begin{figure}[!ht]\color{darkblue}
         \begin{center}
-        \includegraphics[width=2.25in]{../exploration_visualization/PointmassEasy-v0_rnd1.0.png}
-        \includegraphics[width=2.25in]{../exploration_visualization/PointmassMedium-v0_rnd1.0.png}
-        \includegraphics[width=2.25in]{../exploration_visualization/PointmassHard-v0_rnd1.0.png}    
+        % \includegraphics[width=2.25in]{../exploration_visualization/PointmassEasy-v0_rnd1.0.png}
+        % \includegraphics[width=2.25in]{../exploration_visualization/PointmassMedium-v0_rnd1.0.png}
+        % \includegraphics[width=2.25in]{../exploration_visualization/PointmassHard-v0_rnd1.0.png}    
     \end{center}
         \caption{Dataset Visualization of Easy (left), Medium (center), and Hard (right) Environments}
     \end{figure}
