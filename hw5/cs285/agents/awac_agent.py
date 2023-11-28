@@ -32,21 +32,22 @@ class AWACAgent(DQNAgent):
     ):
         with torch.no_grad():
             # TODO(student): compute the actor distribution, then use it to compute E[Q(s, a)]
-            next_qa_values = ...
+            action_dist = self.actor(observations)
+            next_qa_values = self.critic(next_observations)
 
             # Use the actor to compute a critic backup
-
-            next_qs = ...
+            next_qs = torch.sum(next_qa_values * action_dist.probs, dim=-1)
 
             # TODO(student): Compute the TD target
-            target_values = ...
+            target_values = rewards + self.discount * next_qs * (~dones)
 
         
         # TODO(student): Compute Q(s, a) and loss similar to DQN
-        q_values = ...
+        qa_values = self.critic(observations)
+        q_values = torch.gather(qa_values, 1, actions.unsqueeze(-1)).squeeze(-1)
         assert q_values.shape == target_values.shape
 
-        loss = ...
+        loss = self.critic_loss(q_values, target_values)
 
         return (
             loss,
@@ -68,11 +69,13 @@ class AWACAgent(DQNAgent):
         action_dist: Optional[torch.distributions.Categorical] = None,
     ):
         # TODO(student): compute the advantage of the actions compared to E[Q(s, a)]
-        qa_values = ...
-        q_values = ...
-        values = ...
+        qa_values = self.critic(observations)
+        if action_dist is None:
+            action_dist = self.actor(observations)
+        q_values = torch.sum(qa_values * action_dist.probs, dim=-1)
+        values = torch.gather(qa_values, 1, actions.unsqueeze(-1)).squeeze(-1)
 
-        advantages = ...
+        advantages = q_values - values
         return advantages
 
     def update_actor(
@@ -81,7 +84,9 @@ class AWACAgent(DQNAgent):
         actions: torch.Tensor,
     ):
         # TODO(student): update the actor using AWAC
-        loss = ...
+        action_dist = self.actor(observations)
+        advantages = self.compute_advantage(observations, actions, action_dist)
+        loss = -torch.mean(action_dist.log_prob(actions) * advantages.detach())
 
         self.actor_optimizer.zero_grad()
         loss.backward()

@@ -1,5 +1,6 @@
 import torch
 from torch import nn
+import torch.nn.functional as F
 import numpy as np
 
 from typing import Callable, List, Tuple
@@ -40,13 +41,15 @@ class RNDAgent(DQNAgent):
         self.rnd_optimizer = make_rnd_network_optimizer(
             self.rnd_net.parameters()
         )
+        
+        self.rnd_loss_fn = F.mse_loss
 
     def update_rnd(self, obs: torch.Tensor) -> torch.Tensor:
         """
         Update the RND network using the observations.
         """
         # TODO(student): update the RND network
-        loss = ...
+        loss = self.rnd_loss_fn(self.rnd_net(obs), self.rnd_target_net(obs))
 
         self.rnd_optimizer.zero_grad()
         loss.backward()
@@ -65,9 +68,16 @@ class RNDAgent(DQNAgent):
     ):
         with torch.no_grad():
             # TODO(student): Compute RND bonus for batch and modify rewards
-            rnd_error = ...
+            rnd_error = torch.max(
+                torch.norm(
+                    self.rnd_net(observations) - self.rnd_target_net(observations),
+                    dim=-1,
+                    keepdim=True
+                ), 
+                dim=-1
+            )[0]
             assert rnd_error.shape == rewards.shape
-            rewards = ...
+            rewards = rewards + self.rnd_weight * rnd_error
 
         metrics = super().update(observations, actions, rewards, next_observations, dones, step)
 

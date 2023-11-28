@@ -1,7 +1,7 @@
 \documentclass{article}
 \usepackage{xcolor}
 \usepackage{titleps}
-\usepackage[letterpaper, margin=0.95in]{geometry}
+\usepackage[letterpaper, margin=0.8in]{geometry}
 \usepackage{url}
 \usepackage{amsmath}
 \usepackage{amssymb}
@@ -111,7 +111,7 @@ You may also assume access to the distributions $\pi(\a\mid\s)$ and $\pib(\a\mid
 
 	\item\label{q:kl} Suppose we wish to learn $\pi$ under a KL-divergence constraint, i.e., 
 	\begin{align*}
-		D(\pi,\pib)=\E_{\s\sim p_\pi}D_{KL}[\pi(\a\mid\s)\|\pib(\a\mid\s)].
+		D(\pi,\pib)=D_{KL}[\pi(\a\mid\s)\|\pib(\a\mid\s)].
 	\end{align*}
 	How can we enforce this constraint by adding a bonus $b(\s,\a)$ to the reward $\bar r(\s,\a)=r(\s,\a)+\lambda b(\s,\a)$? Write your answer as an expression for $b(\s,\a)$.
 	
@@ -179,7 +179,7 @@ You will be writing new code in the following files (all in the \texttt{hw5/cs28
     \vspace{-10pt}
 \end{figure}
 \subsection{Environments}
-Unlike previous assignments, we will consider some stochastic dynamics, discrete-action gridworld environments in this assignment. The three gridworld environments you will need for the graded part of this assignment are of varying difficulty: \texttt{easy}, \texttt{medium} and \texttt{hard}. A picture of these environments is shown below. The easy environment requires following two hallways with a right turn in the middle. The medium environment is a maze requiring multiple turns. The hard environment is a four-rooms task which requires navigating between multiple rooms through narrow passages to reach the goal location. We also provide a very hard environment for the bonus (optional) part of this assignment.
+Unlike previous assignments, we will consider some stochastic dynamics, discrete-action gridworld environments in this assignment. The three gridworld environments you will need for the graded part of this assignment are of varying difficulty: \texttt{easy}, \texttt{medium} and \texttt{hard}. A picture of these environments is shown in Figure 1. The easy environment requires following two hallways with a right turn in the middle. The medium environment is a maze requiring multiple turns. The hard environment is a four-rooms task which requires navigating between multiple rooms through narrow passages to reach the goal location. We also provide a very hard environment for the bonus (optional) part of this assignment.
 
 \subsection{Random Network Distillation (RND) Algorithm}
 A common way of doing exploration is to visit states with a large prediction error of some quantity, for instance, the TD error or even random functions. The RND algorithm, as covered in Lecture 13, aims at encouraging exploration by asking the exploration policy to more frequently undertake transitions where the prediction error of a random neural network function is high. Formally, let ${f}_\theta^*(s')$ be a randomly chosen vector-valued function represented by a neural network. RND trains another neural network, $\hat{f}_\phi(s')$ to match the predictions of $f^*_\theta(s')$ under the distribution of datapoints in the buffer, as shown below:
@@ -191,13 +191,15 @@ If a transition $(s, a, s')$ is in the distribution of the data buffer, the pred
 In this problem, we represent the random functions utilized by RND, $f^*_\theta(s')$ and $\hat{f}_\phi(s')$ via random neural networks. To prevent the neural networks from having zero prediction error right from the beginning, we initialize the target $f^*_\theta$ using an alternative initialization scheme in \verb+agents/rnd_agent.py+. 
 
 \subsection{Conservative Q-Learning (CQL) Algorithm}
-For the first portion of the offline RL part of this assignment, we will implement the conservative Q-learning (CQL) algorithm. The goal of CQL is to preventing overestimation of the policy value. In order to do that, a conservative, lower-bound Q-function is learned by additionally minimizing Q-values alongside a standard Bellman error objective. This is done by augmenting the Q-function training with a regularizer that minimizes the soft-maximum of the Q-values $\log \left( \sum_{a} \exp(Q(s, a)) \right)$ and maximizes the Q-value on the state-action pair seen in the dataset, $Q(s, a)$. The overall CQL objective is given by the standard TD error objective augmented with the CQL regularizer weighted by $\alpha$: $\alpha \left[\frac{1}{N}\sum_{i=1}^N \left(\log\left(\sum_{a} \exp(Q(s_i, a))\right) - Q(s_i, a_i) \right) \right]$. You will tweak this value of $\alpha$ in later questions in this assignment.  
+For the first portion of the offline RL part of this assignment, we will implement the conservative Q-learning (CQL) algorithm. The goal of CQL is to preventing overestimation of the policy value. In order to do that, a conservative, lower-bound Q-function is learned by additionally minimizing Q-values alongside a standard Bellman error objective. This is done by augmenting the Q-function training with a regularizer that minimizes the soft-maximum of the Q-values $\log \left( \sum_{a} \exp(Q(s, a)) \right)$ and maximizes the Q-value on the state-action pair seen in the dataset, $Q(s, a)$. The overall CQL objective is given by the standard TD error objective augmented with the CQL regularizer weighted by $\alpha$: 
+\[\alpha \left[\frac{1}{N}\sum_{i=1}^N \left(\log\left(\sum_{a} \exp(Q(s_i, a))\right) - Q(s_i, a_i) \right) \right].\] 
+You will tweak this value of $\alpha$ in later questions in this assignment.  
 
 \subsection{Advantage Weighted Actor Critic (AWAC) Algorithm}
 For the second portion of the offline RL part of this assignment, we will implement the AWAC algorithm. This augments the training of the policy by utilizing the following actor update:
 
 \begin{equation}
-    \theta \leftarrow \arg \max_\theta~ \mathbb{E}_{s, a \sim \mathcal{B}} \left[\log \pi_{\theta}(a|s) \exp(\frac{1}{\lambda} \mathcal{A}^{\pi_{k}}(s,a)) \right].
+    \theta \leftarrow \arg \max_\theta~ \mathbb{E}_{s, a \sim \mathcal{B}} \left[\log \pi_{\theta}(a|s) \exp\left(\frac{1}{\lambda} \mathcal{A}^{\pi_{k}}(s,a)\right) \right].
 \end{equation}
 
 This update is similar to weighted behavior cloning (which it resolves to if the Q function is degenerate). But with a well-formed Q estimate, we weight the policy towards selecting actions that are high under our learnt q function. In the update above, the agent regresses onto high-advantage actions with a large weight, while almost ignoring low-advantage actions. This actor update amounts to weighted maximum likelihood (i.e., supervised learning), where the targets are obtained by re-weighting the state-action pairs observed in the current dataset
@@ -207,7 +209,7 @@ sampling (s, a) from the replay buffer $\beta$.
 
 The Q function is learnt with a Temporal Difference (TD) Loss. The objective can be found below.
 \begin{equation}
-    \mathbb{E}_{D}[(Q(s,a) - r(s,a) + \gamma\mathbb{E}_{a' \sim \pi}[Q_{\phi_{k-1}}(s',a')])^2]
+    \mathbb{E}_{D}\left[\left(Q(s,a) - \left(r(s,a) + \gamma\mathbb{E}_{a' \sim \pi}[Q_{\phi_{k-1}}(s',a')]\right)\right)^2\right]
 \end{equation}
 
 Note that next actions $a'$ are sampled from the learned policy $\pi$, meaning that OOD actions will not be sampled if $\pi$ does a good job of fitting the (weighted) behavior policy.
@@ -265,6 +267,17 @@ python cs285/scripts/run_hw5_explore.py \
 \end{lstlisting}
 These scripts will save visualizations of the final dataset in the \verb+exploration+ directory, as well as intermediate results in the Tensorboard logs. Include the final dataset visualization in your report.
 
+\begin{sol} I provide the final dataset visualizations for each of the easy, medium, and hard environments below:
+\begin{figure}[!ht]\color{darkblue}
+    \begin{center}
+    \includegraphics[width=2.2in]{../exploration_visualization/PointmassEasy-v0_random.png}
+    \includegraphics[width=2.2in]{../exploration_visualization/PointmassMedium-v0_random.png}
+    \includegraphics[width=2.2in]{../exploration_visualization/PointmassHard-v0_random.png}    
+\end{center}
+    \caption{Dataset Visualization of Easy (left), Medium (center), and Hard (right) Environments}
+\end{figure}
+\end{sol}
+
 \subsection{Random Network Distillation}
 \textbf{What you will implement}: the RND algorithm for exploration. You will need to change \verb+cs285/agents/rnd_agent.py+. In addition, you should also thoroughly read through the training scheme in \verb+run_hw5_explore.py+. It's very similar to the DQN training scheme you implemented in HW3.
 
@@ -287,6 +300,17 @@ python cs285/scripts/run_hw5_explore.py \
 
 Again, include the visualizations in your final report. \textbf{These visualizations, particularly the RND error map, will be very helpful for debugging!}
 
+\begin{sol} I provide the final dataset visualizations for each of the easy, medium, and hard environments below:
+    \begin{figure}[!ht]\color{darkblue}
+        \begin{center}
+        \includegraphics[width=2.25in]{../exploration_visualization/PointmassEasy-v0_rnd1.0.png}
+        \includegraphics[width=2.25in]{../exploration_visualization/PointmassMedium-v0_rnd1.0.png}
+        \includegraphics[width=2.25in]{../exploration_visualization/PointmassHard-v0_rnd1.0.png}    
+    \end{center}
+        \caption{Dataset Visualization of Easy (left), Medium (center), and Hard (right) Environments}
+    \end{figure}
+    \end{sol}
+
 \section{Offline RL}
 
 \subsection{CQL}
@@ -299,11 +323,11 @@ python ./cs285/scripts/run_hw5_offline.py \
     -cfg experiments/offline/pointmass_easy_cql.yaml \
     --dataset_dir datasets
 python ./cs285/scripts/run_hw5_offline.py \
-    -cfg experiments/offline/pointmass_medium_dqn.yaml \
+    -cfg experiments/offline/pointmass_medium_cql.yaml \
     --dataset_dir datasets
 
 python ./cs285/scripts/run_hw5_offline.py \
-    -cfg experiments/offline/pointmass_easy_cql.yaml \
+    -cfg experiments/offline/pointmass_easy_dqn.yaml \
     --dataset_dir datasets
 python ./cs285/scripts/run_hw5_offline.py \
     -cfg experiments/offline/pointmass_medium_dqn.yaml \
@@ -312,15 +336,27 @@ python ./cs285/scripts/run_hw5_offline.py \
 
 On the Medium environment, create several experiment variations in which the value of the $\alpha$ parameter is varied, from $\alpha=0$ (equivalent to DQN) to $\alpha=10$. Show both resulting $Q$-values and evaluation performances in a plot. In the caption, describe how the $\alpha$ parameter affects training and performance in offline RL.
 
+\begin{sol}
+    
+\end{sol}
+
 \subsection{Policy Constraint Methods: IQL and AWAC}
 While CQL learns an actor via a modification to actor-critic algorithms like DQN that regularizes actions towards those found in the dataset by decreasing OOD $Q$-values, AWAC learns an in-distribution policy directly by performing weighted behavior cloning on the dataset.
 
 Implement AWAC in \verb+cs285/agents/awac_agent.py+, and IQL in \verb+cs285/agents/iql_agent.py+. Compare them using the IQL and AWAC configuration files in the \verb+experiments+ directory. Report evaluation curves for both approaches.
 
+\begin{sol}
+    
+\end{sol}
+
 \subsection{Data ablations}
 Finally, compare the performance of offline RL under several different sizes of dataset. Run RND with \verb+total_steps+ 1000, 5000, 10000, and 20000 on either the Medium or Hard environment, creating a new dataset for each variation (you will need to make several .yaml config files for this). Then, train a CQL agent on each dataset and report its performance as well as evaluation curves.
 
-\section{Online Fine-Tuning}
+\begin{sol}
+    
+\end{sol}
+
+\section{Online Fine-Tuning (Extra Credit)}
 So far we only support training an algorithm purely offline, using data collected in a previous run. In \verb+run_hw5_finetune.py+, implement online fine-tuning by first loading an offline dataset and taking a fixed number of training steps with an offline RL algorithm of your choice (IQL, CQL, or AWAC) and then switching to online learning while keeping all of the data in the dataset to initialize your replay buffer.
 
 Report results as evaluation returns, clearly indicating the point at which online fine-tuning begins. An example configuration is provided for you in \verb+experiments/finetune/pointmass_hard_cql_finetune.yaml+.
