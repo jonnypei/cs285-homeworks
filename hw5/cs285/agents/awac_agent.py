@@ -70,12 +70,11 @@ class AWACAgent(DQNAgent):
     ):
         # TODO(student): compute the advantage of the actions compared to E[Q(s, a)]
         qa_values = self.critic(observations)
-        if action_dist is None:
-            action_dist = self.actor(observations)
+        if action_dist is None: action_dist = self.actor(observations)
         q_values = torch.sum(qa_values * action_dist.probs, dim=-1)
         values = torch.gather(qa_values, 1, actions.unsqueeze(-1)).squeeze(-1)
 
-        advantages = q_values - values
+        advantages = values - q_values
         return advantages
 
     def update_actor(

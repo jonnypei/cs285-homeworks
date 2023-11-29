@@ -39,8 +39,7 @@ class IQLAgent(AWACAgent):
     ):
         # TODO(student): Compute advantage with IQL
         qa_values = self.critic(observations)
-        if action_dist is None:
-            action_dist = self.actor(observations)
+        if action_dist is None: action_dist = self.actor(observations)
         q_values = torch.sum(qa_values * action_dist.probs, dim=-1)
         values = self.value_critic(observations)
         return q_values - values
@@ -59,7 +58,7 @@ class IQLAgent(AWACAgent):
         # TODO(student): Update Q(s, a) to match targets (based on V)
         qa_values = self.critic(observations)
         q_values = torch.gather(qa_values, 1, actions.unsqueeze(-1)).squeeze(-1)
-        next_vs = self.target_critic(next_observations).max()
+        next_vs = self.target_critic(next_observations).max(dim=-1)[0]
         target_values = rewards + self.discount * next_vs * (~dones)
         loss = self.critic_loss(q_values, target_values)
 

@@ -77,7 +77,7 @@ backgroundcolor = \color{light-yellow}
 \begin{centering}
     {\Large Assignment 5: Exploration Strategies and Offline Reinforcement Learning} \\
     \vspace{.25cm}
-    \textbf{Due Tuesday, November 21, 11:59 pm} \\
+    \textbf{By Jonathan Pei} \\
 \end{centering}
 
 \section{Analysis}
@@ -276,9 +276,9 @@ These scripts will save visualizations of the final dataset in the \verb+explora
 \begin{sol} I provide the final dataset visualizations for each of the easy, medium, and hard environments below:
 \begin{figure}[!ht]\color{darkblue}
     \begin{center}
-    % \includegraphics[width=2.2in]{../exploration_visualization/PointmassEasy-v0_random.png}
-    % \includegraphics[width=2.2in]{../exploration_visualization/PointmassMedium-v0_random.png}
-    % \includegraphics[width=2.2in]{../exploration_visualization/PointmassHard-v0_random.png}    
+    \includegraphics[width=2.2in]{../exploration_visualization/PointmassEasy-v0_random.png}
+    \includegraphics[width=2.2in]{../exploration_visualization/PointmassMedium-v0_random.png}
+    \includegraphics[width=2.2in]{../exploration_visualization/PointmassHard-v0_random.png}    
 \end{center}
     \caption{Dataset Visualization of Easy (left), Medium (center), and Hard (right) Environments}
 \end{figure}
@@ -309,9 +309,9 @@ Again, include the visualizations in your final report. \textbf{These visualizat
 \begin{sol} I provide the final dataset visualizations for each of the easy, medium, and hard environments below:
     \begin{figure}[!ht]\color{darkblue}
         \begin{center}
-        % \includegraphics[width=2.25in]{../exploration_visualization/PointmassEasy-v0_rnd1.0.png}
-        % \includegraphics[width=2.25in]{../exploration_visualization/PointmassMedium-v0_rnd1.0.png}
-        % \includegraphics[width=2.25in]{../exploration_visualization/PointmassHard-v0_rnd1.0.png}    
+        \includegraphics[width=2.25in]{../exploration_visualization/PointmassEasy-v0_rnd1.0.png}
+        \includegraphics[width=2.25in]{../exploration_visualization/PointmassMedium-v0_rnd1.0.png}
+        \includegraphics[width=2.25in]{../exploration_visualization/PointmassHard-v0_rnd1.0.png}    
     \end{center}
         \caption{Dataset Visualization of Easy (left), Medium (center), and Hard (right) Environments}
     \end{figure}
@@ -343,7 +343,15 @@ python ./cs285/scripts/run_hw5_offline.py \
 On the Medium environment, create several experiment variations in which the value of the $\alpha$ parameter is varied, from $\alpha=0$ (equivalent to DQN) to $\alpha=10$. Show both resulting $Q$-values and evaluation performances in a plot. In the caption, describe how the $\alpha$ parameter affects training and performance in offline RL.
 
 \begin{sol}
-    
+    After implementing the CQL agent, we ablate the $\alpha$ parameter, varying across the values $\{0, 0.01, 0.1, 1, 10\}$. We plot the $Q$-values and eval returns below:
+    \begin{figure}[!ht]\color{darkblue}
+        \begin{center}
+        \includegraphics[width=3in]{q4.1_qvals.PNG}
+        \includegraphics[width=3in]{q4.1_return.PNG}
+        \end{center}
+        \caption{$Q$-values (left) and Evaluation Returns (right) on the \texttt{PointmassMedium-v0} environment.}
+    \end{figure} 
+    We see that generally, smaller $\alpha$ values (e.g. near 0.01) result in better overall performance. This is because the agent is able to learn a good policy when the penalty is small. The large penalty ($\alpha \geq 1$) results in relatively flat return curves, as the heavy penalty hinders convergence.
 \end{sol}
 
 \subsection{Policy Constraint Methods: IQL and AWAC}
@@ -352,14 +360,29 @@ While CQL learns an actor via a modification to actor-critic algorithms like DQN
 Implement AWAC in \verb+cs285/agents/awac_agent.py+, and IQL in \verb+cs285/agents/iql_agent.py+. Compare them using the IQL and AWAC configuration files in the \verb+experiments+ directory. Report evaluation curves for both approaches.
 
 \begin{sol}
-    
+    After implementing the IQL and AWAC agents, we compare their evaluation returns on the \texttt{PointmassEasy-v0} and \texttt{PointmassMedium-v0} environments below:
+    \begin{figure}[!ht] \color{darkblue}
+        \begin{center}
+        \includegraphics[width=3in]{q4.2_easy.PNG}
+        \includegraphics[width=3in]{q4.2_medium.PNG}
+        \end{center}
+        \caption{Comparing IQL and AWAC on the \texttt{PointmassEasy-v0} (left) and \texttt{PointmassMedium-v0} (right) environments.}
+    \end{figure} 
+    We see that IQL outperforms AWAC on both environments, both in terms of raw performance and stability. 
 \end{sol}
 
 \subsection{Data ablations}
 Finally, compare the performance of offline RL under several different sizes of dataset. Run RND with \verb+total_steps+ 1000, 5000, 10000, and 20000 on either the Medium or Hard environment, creating a new dataset for each variation (you will need to make several .yaml config files for this). Then, train a CQL agent on each dataset and report its performance as well as evaluation curves.
 
 \begin{sol}
-    
+    We run RND with \texttt{total\_steps} set to 1000, 5000, 10000, and 20000 on the \texttt{PointmassMedium-v0} environment to produce a dataset for each variation. Then, after training CQL on each dataset, we obtain the following comparative results:
+    \begin{figure}[!ht]\color{darkblue}
+        \begin{center}
+            \includegraphics[width=4in]{q4.3.PNG}
+        \end{center}
+        \caption{CQL on Datasets with Varying \texttt{total\_steps} for RND.}
+    \end{figure}
+    We see that CQL performs better on datasets produced with higher \texttt{total\_steps} values in RND. In particular, we observe flat returns for smaller values of \texttt{total\_steps}, and similar performance for $\texttt{total\_steps} \in \{10000, 20000\}$. 
 \end{sol}
 
 \section{Online Fine-Tuning (Extra Credit)}
